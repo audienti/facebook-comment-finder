@@ -1,0 +1,37 @@
+{
+  "name": "facebook-comment-finder",
+  "version": "0.1.1",
+  "description": "Turn an offer into Facebook signal discovery with page-led and post-led retrieval, ranked goodput, and thread-aware reply angles.",
+  "author": {
+    "name": "William Flanagan",
+    "email": "wflanagan@audienti.com"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/audienti/facebook-comment-finder",
+  "repository": "https://github.com/audienti/facebook-comment-finder",
+  "keywords": [
+    "facebook",
+    "comment-discovery",
+    "audience-signal",
+    "brand-building",
+    "reply-drafting"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Facebook Signal Finder",
+    "shortDescription": "Find real Facebook posts and comments worth engaging now for buyer signal or audience visibility.",
+    "longDescription": "Turns an offer URL or short offer summary into Facebook signal discovery, uses page-led and post-led retrieval, filters praise spam and parasocial noise, keeps only engage-now threads, and drafts thread-aware reply angles when useful.",
+    "developerName": "William Flanagan",
+    "category": "Sales",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Find Facebook signal for this offer and show the best posts and comments.",
+      "Turn this offer into Facebook seed pages, findings, and reply angles.",
+      "Find real Facebook conversations where this ICP is exposing the problem or the audience."
+    ],
+    "brandColor": "#1877F2"
+  }
+}
