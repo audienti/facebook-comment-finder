@@ -27,6 +27,12 @@ HARD_PROMO_RE = re.compile(
     r"\b(dm me|book a call|book a demo|free trial|use my code|telegram|whatsapp)\b",
     re.IGNORECASE,
 )
+ENGAGEMENT_BAIT_RE = re.compile(
+    r"\b(follow (our|my) page|follow for more|comment [\"']?[a-z0-9 _-]+[\"']?( below)? and we'?ll send|"
+    r"comment [\"']?[a-z0-9 _-]+[\"']?( below)? and i'?ll send|drop [a-z0-9 _-]+ in the comments|"
+    r"tag a friend|share this to|dm us)\b",
+    re.IGNORECASE,
+)
 PROMO_RE = re.compile(
     r"\b(launching|launched|join my|join us|waitlist|free doc|free guide|template|download the guide)\b",
     re.IGNORECASE,
@@ -118,9 +124,16 @@ def classify_surface(
     substantive_text: bool,
     business_surface: bool,
     root_operator_signal: bool,
+    hard_promo: bool,
+    engagement_bait: bool,
     ai_slop: bool,
 ) -> str:
-    if not substantive_text or not business_surface or ai_slop:
+    if (
+        not substantive_text
+        or not business_surface
+        or ai_slop
+        or ((hard_promo or engagement_bait) and not root_operator_signal)
+    ):
         return "discard"
     if root_operator_signal:
         return "direct_buyer"
@@ -145,6 +158,8 @@ def choose_action_type(
 def failure_mode(flags: dict) -> str:
     if flags["isAiSlopLikely"]:
         return "ai_slop_or_hot_take"
+    if flags["isEngagementBaitLikely"] or flags["isHardPromotional"]:
+        return "engagement_bait_or_hard_self_promo"
     if not flags["businessSurface"]:
         return "not_a_business_surface"
     if not flags["audienceBacked"] and not flags["rootOperatorSignal"]:
@@ -161,6 +176,7 @@ def normalize_item(item: dict) -> dict:
     pain_signal = bool(PAIN_RE.search(text))
     strategic_signal = bool(STRATEGIC_RE.search(text))
     hard_promo = bool(HARD_PROMO_RE.search(text))
+    engagement_bait = bool(ENGAGEMENT_BAIT_RE.search(text))
     promo = bool(PROMO_RE.search(text))
     ai_slop = bool(AI_SLOP_RE.search(text))
     substantive_text = is_substantive_text(text)
@@ -182,6 +198,8 @@ def normalize_item(item: dict) -> dict:
         substantive_text=substantive_text,
         business_surface=business_surface,
         root_operator_signal=root_operator_signal,
+        hard_promo=hard_promo,
+        engagement_bait=engagement_bait,
         ai_slop=ai_slop,
     )
     action_type = choose_action_type(
@@ -203,6 +221,7 @@ def normalize_item(item: dict) -> dict:
             "strategicSignal": strategic_signal,
             "isPromotional": promo,
             "isHardPromotional": hard_promo,
+            "isEngagementBaitLikely": engagement_bait,
             "isAiSlopLikely": ai_slop,
             "businessSurface": business_surface,
             "audienceBacked": audience_backed,
@@ -213,6 +232,8 @@ def normalize_item(item: dict) -> dict:
             "primaryFailureMode": failure_mode(
                 {
                     "isAiSlopLikely": ai_slop,
+                    "isEngagementBaitLikely": engagement_bait,
+                    "isHardPromotional": hard_promo,
                     "businessSurface": business_surface,
                     "audienceBacked": audience_backed,
                     "rootOperatorSignal": root_operator_signal,

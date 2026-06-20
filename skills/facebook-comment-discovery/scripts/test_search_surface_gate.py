@@ -27,10 +27,22 @@ def main() -> None:
         "topReactionsCount": 100,
         "time": "2026-06-20T12:22:37.000Z",
     }
-    result = normalize([good, bad])
+    bait = {
+        "postId": "3",
+        "url": "https://facebook.com/bait",
+        "text": "Follow our page for daily growth hacks. Comment GUIDE and we'll send it.",
+        "pageName": "Growth Wizard",
+        "user": {"name": "Growth Wizard"},
+        "likes": 40,
+        "shares": 8,
+        "topReactionsCount": 42,
+        "time": "2026-06-20T12:22:37.000Z",
+    }
+    result = normalize([good, bad, bait])
     posts = {post["id"]: post for post in result["posts"]}
     assert posts["1"]["analysis"]["actionType"] == "engage_now"
     assert posts["2"]["analysis"]["actionType"] == "discard"
+    assert posts["3"]["analysis"]["actionType"] == "discard"
 
 
 if __name__ == "__main__":

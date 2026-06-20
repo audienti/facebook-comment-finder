@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.3 - 2026-06-20
+
+- Hardened the post-level visibility gate to discard engagement-bait and hard
+  self-promotional Facebook posts before they count as goodput.
+- Added a self-check that proves a real visibility surface stays in while bait
+  gets dropped.
+
 ## 0.1.2 - 2026-06-20
 
 - Added a post-level Facebook page normalizer so `visibility_leverage` runs
