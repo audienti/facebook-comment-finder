@@ -1,6 +1,6 @@
 {
   "name": "facebook-comment-finder",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Turn an offer into Facebook signal discovery with page-led and post-led retrieval, ranked goodput, and thread-aware reply angles.",
   "author": {
     "name": "William Flanagan",

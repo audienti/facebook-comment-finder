@@ -66,7 +66,9 @@ Notes from the live checks:
 - The maintained posts actor targets public pages, not personal profiles.
 - A sample run on 2026-06-18 against `https://www.facebook.com/humansofnewyork/`
   succeeded and returned public reel or post URLs plus engagement counts.
-- Use this actor to shortlist posts worth a second comments pass.
+- Use this actor to shortlist posts worth a second comments pass, or return
+  them directly as visibility-leverage surfaces when the root post is already
+  strong.
 
 Typical call flow:
 

@@ -4,13 +4,14 @@ Facebook Signal Finder is a Codex and Claude Code plugin for turning an offer
 into real Facebook posts and comment threads worth engaging now for buyer
 signal or audience visibility.
 
-It is built for comment-first discovery on public Facebook surfaces. The
+It is built for mixed signal discovery on public Facebook surfaces. The
 strongest motion is usually:
 
 1. start from known-good public pages
 2. scrape recent posts
-3. shortlist posts with real discussion
-4. scrape comments from those post URLs
+3. either engage the strongest posts directly for visibility leverage or
+   deepen into comments for buyer-intent work
+4. scrape comments from the best post URLs when comment-level evidence matters
 5. normalize for goodput instead of raw reach
 
 ## What the plugin provides
@@ -23,6 +24,8 @@ strongest motion is usually:
 - A helper script to resolve and scaffold note paths
 - A helper script to normalize Apify Facebook comment datasets into grouped
   post plus comment shapes
+- A helper script to normalize Facebook page-post datasets into post-level
+  visibility-leverage findings
 - Codex marketplace metadata at `.codex-plugin/plugin.json`
 - Claude Code marketplace metadata at `.claude-plugin/plugin.json`
 
@@ -44,8 +47,10 @@ The plugin adds a research skill that:
 - prefers page-led post discovery over blind keyword search
 - uses `apify/facebook-posts-scraper` to find recent public posts on seeded
   pages
+- uses those page posts directly for visibility-leverage scoring when the root
+  post is already strong
 - uses `apify/facebook-comments-scraper` to extract comments from shortlisted
-  public post URLs
+  public post URLs when comment-level evidence matters
 - ranks comments by commercial signal and engagement value
 - drops creator self-comments, low-signal reactions, and self-promo by default
 - keeps surfaced hits focused on direct questions and first-person pain
@@ -58,8 +63,8 @@ The plugin adds a research skill that:
 
 - The returned queue is `raw surfaces -> engage_now -> discard`.
 - There is no watch bucket or maybe-later bucket in the published contract.
-- On Facebook, the real motion is page-led or post-led retrieval plus comment
-  scoring, not blind open search.
+- On Facebook, page-led posts can already be final `engage_now` surfaces for
+  `visibility_leverage`. Comments are the deepening layer, not the only layer.
 
 ## Runtime requirements
 
@@ -91,12 +96,13 @@ connector.
 4. Build seed page and seed post hypotheses.
 5. Run `apify/facebook-posts-scraper` on known public page URLs to collect
    recent posts.
-6. Shortlist posts with visible discussion, then run
-   `apify/facebook-comments-scraper` on those post URLs.
-7. Normalize the comment dataset into grouped posts plus comment rows with
-   thread viability, self-comment exclusion, and keep or suppress decisions.
-8. Rank comments, penalize vanity chatter, and split the kept set into
-   commercial outcomes plus action types.
+6. Score the page posts directly for visibility leverage, then run
+   `apify/facebook-comments-scraper` on the best post URLs when deeper comment
+   evidence is needed.
+7. Normalize either the posts dataset or the comments dataset into goodput
+   findings.
+8. Rank the surviving posts or comments, penalize vanity chatter, and split
+   the kept set into commercial outcomes plus action types.
 9. Draft thread-aware replies or follow-up angles when asked.
 
 ## Usage
@@ -120,6 +126,7 @@ skills/facebook-comment-discovery/references/comment-modes.md
 skills/facebook-comment-discovery/references/comment-signal-framework.md
 skills/facebook-comment-discovery/references/facebook-engagement-rubric.md
 skills/facebook-comment-discovery/scripts/normalize_apify_comment_results.py
+skills/facebook-comment-discovery/scripts/normalize_apify_search_results.py
 skills/facebook-comment-discovery/scripts/resolve_memory.py
 skills/facebook-comment-discovery/memory/README.md
 skills/facebook-comment-discovery/memory/lessons.md
@@ -139,6 +146,7 @@ python3 /Users/williamflanagan/.codex/skills/.system/plugin-creator/scripts/vali
 python3 /Users/williamflanagan/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/facebook-comment-discovery
 python3 skills/facebook-comment-discovery/scripts/resolve_memory.py --url https://example.com --icp "AI startup founders" --strategy "visibility_leverage"
 python3 skills/facebook-comment-discovery/scripts/normalize_apify_comment_results.py --input sample.json
+python3 skills/facebook-comment-discovery/scripts/normalize_apify_search_results.py --input sample.json
 ```
 
 ## License

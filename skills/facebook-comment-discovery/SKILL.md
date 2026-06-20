@@ -57,10 +57,10 @@ alone.
   question is `is this comment predictive that this person or audience would
   care about what we sell`.
 - On Facebook, page choice matters more than keyword cleverness.
-- Default to page-led post discovery plus post-led comment collection.
+- Default to page-led post discovery for `visibility_leverage`, then deepen
+  into comments only when buyer-intent evidence matters.
 - Use open search only as a weak fallback for finding likely public pages or
-  public posts. Never ship open-search results as final signal without a
-  second pass on comments.
+  public posts.
 - When the strategy is `visibility_leverage`, prefer
   seeded named competitors, creators, consultants, communities, or partners
   before refreshing through open search.
@@ -161,15 +161,16 @@ alone.
    - `viewOption="RANKED_UNFILTERED"` or `"RECENT_ACTIVITY"`
    - Search-led fallback:
    - use web search only to discover likely pages or post URLs
-   - rerun on comments before counting anything as signal
 
 6. Run the Actors.
    - Verify schemas against `references/apify-facebook-actors.md`.
    - If page-led:
    - run `apify/facebook-posts-scraper`
    - inspect returned posts
-   - shortlist posts with visible discussion and offer-adjacent themes
-   - rerun `apify/facebook-comments-scraper` on those post URLs
+   - normalize with
+     `python3 scripts/normalize_apify_search_results.py --input <dataset.json>`
+   - rerun `apify/facebook-comments-scraper` on the best post URLs only when
+     a second-stage comment pass is justified
    - If post-led:
    - go directly to `apify/facebook-comments-scraper`
    - Save actor input JSON locally.

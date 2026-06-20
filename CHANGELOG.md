@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 - 2026-06-20
+
+- Added a post-level Facebook page normalizer so `visibility_leverage` runs
+  can keep strong page posts without forcing a comments pass first.
+- Updated the skill, README, and actor notes to treat page-led posts as valid
+  final surfaces for audience-leverage work.
+
 ## 0.1.1 - 2026-06-20
 
 - Renamed the user-facing plugin surface to Facebook Signal Finder.
